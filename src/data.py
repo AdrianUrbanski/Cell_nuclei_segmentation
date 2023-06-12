@@ -40,7 +40,7 @@ class RandomPatchesDataset(IterableDataset):
         self.max_iter = max_iter_in_epoch
 
     def __next__(self) -> np.ndarray:
-        if self.i > self.max_iter_in_epoch:
+        if self.i > self.max_iter:
           self.i = 0
           raise StopIteration
         index = self.rng.choice(len(self.data))
@@ -65,7 +65,7 @@ class RandomPatchesDataset(IterableDataset):
                            crop_y: crop_y + self.patch_size[0],
                            crop_x: crop_x + self.patch_size[1],
                            ]
-        self._i += 1
+        self.i += 1
 
         if self.binarize_mask:
             random_mask_crop[random_mask_crop > 0] = 1
