@@ -26,20 +26,22 @@ def main(description_file, images_dir, masks_dir, output_dir, scale):
     })[['image_name', 'magnification']]
 
     for _, row in description_pdf.iterrows():
-        image_name = row['image_name'] + '.tif'
-        img = imageio.imread(images_dir / image_name)
-        mask = imageio.imread(masks_dir / image_name)
+        try:
+            image_name = row['image_name'] + '.tif'
+            img = imageio.imread(images_dir / image_name)
+            mask = imageio.imread(masks_dir / image_name)
 
-        magnification = row['magnification']
-        magnification = int(magnification[:-1])/scale
+            magnification = row['magnification']
+            magnification = int(magnification[:-1])/scale
 
-        new_shape = int(img.shape[1] / magnification), int(img.shape[0] / magnification)
-        img_reshaped = cv2.resize(img, new_shape, interpolation=cv2.INTER_NEAREST)
-        mask_reshaped = cv2.resize(mask, new_shape, interpolation=cv2.INTER_NEAREST)
+            new_shape = int(img.shape[1] / magnification), int(img.shape[0] / magnification)
+            img_reshaped = cv2.resize(img, new_shape, interpolation=cv2.INTER_NEAREST)
+            mask_reshaped = cv2.resize(mask, new_shape, interpolation=cv2.INTER_NEAREST)
 
-        imageio.imsave(output_dir / 'img' / image_name, img_reshaped)
-        imageio.imsave(output_dir / 'mask' / image_name, mask_reshaped)
-
+            imageio.imsave(output_dir / 'img' / image_name, img_reshaped)
+            imageio.imsave(output_dir / 'mask' / image_name, mask_reshaped)
+        except:
+            pass
 
 if __name__ == '__main__':
     main()
